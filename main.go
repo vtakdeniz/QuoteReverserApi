@@ -59,10 +59,30 @@ func fetch() *[]Quote {
 	return quotes
 }
 
+func generateQuoteJSON(m AuthorToQuoteMap) string {
+	type output struct {
+		Author string   `json:"author"`
+		Quotes []string `json:"quotes"`
+	}
+	resString := ""
+
+	for key, val := range m {
+		o := output{
+			Author: key,
+			Quotes: val,
+		}
+		str, _ := json.Marshal(o)
+		resString += string(str)
+	}
+	return resString
+}
+
 func main() {
 	quotes := fetch()
 	parsedQuotes := parseQuotesToMap(quotes)
 	reverseQuotes(parsedQuotes)
-	str, _ := json.Marshal(parsedQuotes)
-	fmt.Println(string(str))
+	//str, _ := json.Marshal(parsedQuotes)
+	//fmt.Println(string(str))
+	str := generateQuoteJSON(parsedQuotes)
+	fmt.Println(str)
 }
